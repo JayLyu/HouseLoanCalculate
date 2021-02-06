@@ -15,9 +15,7 @@ function PMT(ir, np, pv, fv) {
         pv - present value
         fv - future value (residual value)
         */
-  pmt =
-    (ir * (pv * Math.pow(ir + 1, np) + fv)) /
-    ((ir + 1) * (Math.pow(ir + 1, np) - 1));
+  pmt = (ir * (pv * Math.pow(ir + 1, np) + fv)) / ((ir + 1) * (Math.pow(ir + 1, np) - 1));
   return pmt;
 }
 
