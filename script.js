@@ -8,6 +8,19 @@ function $(id) {
   return document.getElementById(id);
 }
 
+function PMT(ir, np, pv, fv) {
+  /*
+        ir - interest rate per month
+        np - number of periods (months)
+        pv - present value
+        fv - future value (residual value)
+        */
+  pmt =
+    (ir * (pv * Math.pow(ir + 1, np) + fv)) /
+    ((ir + 1) * (Math.pow(ir + 1, np) - 1));
+  return pmt;
+}
+
 var data = [
   {
     name: "Total Asset",
@@ -514,135 +527,135 @@ function onPriceChange(e) {
 }
 
 // 渲染贷款图表
-function ShowChart(e) {
-  // onPriceChange($('H_total_price').value);
-  var chartDom = document.getElementById("main");
-  var myChart = echarts.init(chartDom);
-  var option;
-  Calc(e);
-  option = {
-    title: {
-      text: "贷款",
-    },
-    tooltip: {
-      trigger: "item",
-      triggerOn: "mousemove",
-    },
-    animationDurationUpdate: 1500,
-    animationEasingUpdate: "quinticInOut",
-    series: {
-      type: "sankey",
-      layout: "none",
-      emphasis: {
-        focus: "adjacency",
-      },
-      nodeAlign: "left",
-      lineStyle: {
-        color: "gradient",
-        curveness: 0.5,
-      },
-      data: [
-        {
-          name: "总支出",
-        },
-        {
-          name: "契税",
-        },
-        {
-          name: "车位费",
-        },
-        {
-          name: "车位定金",
-        },
-        {
-          name: "车位贷款",
-        },
-        {
-          name: "房屋总价",
-        },
-        {
-          name: "3首付金额",
-        },
-        {
-          name: "贷款总额",
-        },
-        {
-          name: "iHome贷款",
-        },
-        {
-          name: "自掏资金",
-        },
-        {
-          name: "公积金贷款",
-        },
-        {
-          name: "商业贷款",
-        },
-      ],
-      links: [
-        // {
-        //   source: "总支出",
-        //   target: "契税",
-        //   value: H_deedTax,
-        // },
-        // {
-        //   source: "总支出",
-        //   target: "契税",
-        //   value: deedTax,
-        // },
-        // {
-        //   source: "总支出",
-        //   target: "车位费",
-        //   value: carport,
-        // },
-        // {
-        //   source: "总支出",
-        //   target: "房屋总价",
-        //   value: H_total_price,
-        // },
-        {
-          source: "房屋总价",
-          target: "首付金额",
-          value: down_payment_,
-        },
-        {
-          source: "房屋总价",
-          target: "贷款总额",
-          value: loans,
-        },
-        {
-          source: "首付金额",
-          target: "自掏资金",
-          value: myPay,
-        },
-        {
-          source: "首付金额",
-          target: "iHome贷款",
-          value: iHome,
-        },
-        {
-          source: "贷款总额",
-          target: "商业贷款",
-          value: commercialLoans,
-        },
-        {
-          source: "贷款总额",
-          target: "公积金贷款",
-          value: H_fund,
-        },
-        {
-          source: "车位费",
-          target: "车位定金",
-          value: carportEarnest,
-        },
-        {
-          source: "车位费",
-          target: "车位贷款",
-          value: carportLoans,
-        },
-      ],
-    },
-  };
+// function ShowChart(e) {
+//   // onPriceChange($('H_total_price').value);
+//   var chartDom = document.getElementById("main");
+//   var myChart = echarts.init(chartDom);
+//   var option;
+//   Calc(e);
+//   option = {
+//     title: {
+//       text: "贷款",
+//     },
+//     tooltip: {
+//       trigger: "item",
+//       triggerOn: "mousemove",
+//     },
+//     animationDurationUpdate: 1500,
+//     animationEasingUpdate: "quinticInOut",
+//     series: {
+//       type: "sankey",
+//       layout: "none",
+//       emphasis: {
+//         focus: "adjacency",
+//       },
+//       nodeAlign: "left",
+//       lineStyle: {
+//         color: "gradient",
+//         curveness: 0.5,
+//       },
+//       data: [
+//         {
+//           name: "总支出",
+//         },
+//         {
+//           name: "契税",
+//         },
+//         {
+//           name: "车位费",
+//         },
+//         {
+//           name: "车位定金",
+//         },
+//         {
+//           name: "车位贷款",
+//         },
+//         {
+//           name: "房屋总价",
+//         },
+//         {
+//           name: "3首付金额",
+//         },
+//         {
+//           name: "贷款总额",
+//         },
+//         {
+//           name: "iHome贷款",
+//         },
+//         {
+//           name: "自掏资金",
+//         },
+//         {
+//           name: "公积金贷款",
+//         },
+//         {
+//           name: "商业贷款",
+//         },
+//       ],
+//       links: [
+//         // {
+//         //   source: "总支出",
+//         //   target: "契税",
+//         //   value: H_deedTax,
+//         // },
+//         // {
+//         //   source: "总支出",
+//         //   target: "契税",
+//         //   value: deedTax,
+//         // },
+//         // {
+//         //   source: "总支出",
+//         //   target: "车位费",
+//         //   value: carport,
+//         // },
+//         // {
+//         //   source: "总支出",
+//         //   target: "房屋总价",
+//         //   value: H_total_price,
+//         // },
+//         {
+//           source: "房屋总价",
+//           target: "首付金额",
+//           value: down_payment_,
+//         },
+//         {
+//           source: "房屋总价",
+//           target: "贷款总额",
+//           value: loans,
+//         },
+//         {
+//           source: "首付金额",
+//           target: "自掏资金",
+//           value: myPay,
+//         },
+//         {
+//           source: "首付金额",
+//           target: "iHome贷款",
+//           value: iHome,
+//         },
+//         {
+//           source: "贷款总额",
+//           target: "商业贷款",
+//           value: commercialLoans,
+//         },
+//         {
+//           source: "贷款总额",
+//           target: "公积金贷款",
+//           value: H_fund,
+//         },
+//         {
+//           source: "车位费",
+//           target: "车位定金",
+//           value: carportEarnest,
+//         },
+//         {
+//           source: "车位费",
+//           target: "车位贷款",
+//           value: carportLoans,
+//         },
+//       ],
+//     },
+//   };
 
-  option && myChart.setOption(option);
-}
+//   option && myChart.setOption(option);
+// }
