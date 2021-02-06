@@ -1,0 +1,70 @@
+body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    font-size: 0.75rem;
+    margin: 0;
+    padding: 0;
+    font-family: Pingfang SC;
+}
+
+#container {
+    /* width: 50vw; */
+    height: 100vh;
+    /* overflow-y: scroll; */
+}
+
+#container .myForm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    margin: 1rem;
+}
+
+#container .myForm .items {
+    display: inline-grid;
+    grid-row-gap: 10px;
+    grid-template-rows: repeat(auto-fit, 2rem);
+    background: #f7f8f9;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+#container .myForm .items .item {
+    display: inline-grid;
+    grid-template-columns: auto 1fr auto;
+    grid-column-gap: 10px;
+    place-items:center;
+}
+
+#container .myForm .items .item .label {
+    width: 7rem;
+    text-align: right;
+}
+
+#container .myForm .items .item .value {
+    text-align: right;
+    width: 5rem;
+}
+
+#container .myForm .items .item .unit {
+    text-align: right;
+}
+
+
+.chart {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#main {
+    width: 400px;
+    height: 400px;
+}
