@@ -8,11 +8,13 @@ function $(id) {
   return document.getElementById(id);
 }
 
+// 年金函数
 function PMT(ir, np, pv, fv) {
   var pmt = (ir * (pv * Math.pow(ir + 1, np) + fv)) / ((ir + 1) * (Math.pow(ir + 1, np) - 1));
   return pmt;
 }
 
+// 数据
 var data = [
   {
     name: "Total Asset",
@@ -45,7 +47,7 @@ var data = [
   {
     name: "monthlyIncome",
     cn: "个人月收入",
-    column: 3,
+    column: 2,
     row: 1,
     children: [
       {
@@ -75,6 +77,7 @@ var data = [
     cn: "房贷支出",
     column: 1,
     row: 2,
+    gridRowStart: 'span 2',
     children: [
       {
         name: "房屋总价",
@@ -176,13 +179,6 @@ var data = [
         type: "input",
       },
       {
-        name: "自掏资金",
-        id: "myPayment",
-        value: null,
-        unit: "万",
-        type: "text",
-      },
-      {
         name: "车位金额",
         id: "PP_money",
         value: 35,
@@ -232,42 +228,6 @@ var data = [
     ],
   },
   {
-    name: "carLoan",
-    cn: "车贷支出",
-    column: 2,
-    row: 2,
-    children:[
-      {
-        name: "车贷总额",
-        id: "CL_total",
-        value: 25,
-        min: 0,
-        max: null,
-        step: 1,
-        unit: "万",
-        type: "input",
-      },{
-        name: "车贷年限",
-        id: "CL_period",
-        value: 3,
-        min: 0,
-        max: null,
-        step: 1,
-        unit: "年",
-        type: "input",
-      },{
-        name: "车贷利率",
-        id: "CL_rate",
-        value: 3.72,
-        min: 0,
-        max: null,
-        step: 1,
-        unit: "%",
-        type: "input",
-      }
-    ]
-  },
-  {
     name: "expendDetail",
     cn: "月供计算",
     column: 2,
@@ -295,13 +255,6 @@ var data = [
         type: "text",
       },
       {
-        name: "车贷月供",
-        id: "MP_car",
-        value: null,
-        unit: "元",
-        type: "text",
-      },
-      {
         name: "车位月供",
         id: "MP_parking_place",
         value: null,
@@ -320,12 +273,12 @@ var data = [
   {
     name: "myMonthlyExpend",
     cn: "个人月支出",
-    column: 3,
+    column: 2,
     row: 2,
     children: [
       {
         name: "月生活成本",
-        id: "monthlyLifeCost",
+        id: "ME_life",
         value: 0,
         min: 0,
         max: null,
@@ -335,7 +288,17 @@ var data = [
       },
       {
         name: "月房租成本",
-        id: "monthlyRentCost",
+        id: "ME_rent",
+        value: 0,
+        min: 0,
+        max: null,
+        step: 1,
+        unit: "元",
+        type: "input",
+      },
+      {
+        name: "其他贷款",
+        id: "ME_loan",
         value: 0,
         min: 0,
         max: null,
@@ -344,11 +307,33 @@ var data = [
         type: "input",
       }
     ],
-  },{
+  },
+  {
+    name: "myTotalBalance",
+    cn: "个人资产结余",
+    column: 1,
+    row: 4,
+    children: [
+      {
+        name: "自掏资金",
+        id: "myPayment",
+        value: null,
+        unit: "万",
+        type: "text",
+      },{
+        name: "剩余资产",
+        id: "remainingAssets",
+        value: 0,
+        unit: "万",
+        type: "text",
+      },
+    ],
+  },
+  {
     name: "myMonthlyBalance",
     cn: "个人月结余",
-    column: 3,
-    row: 3,
+    column: 2,
+    row: 4,
     children: [
       {
         name: "每月结余",
@@ -359,21 +344,7 @@ var data = [
       }
     ],
   },
-  {
-    name: "myTotalBalance",
-    cn: "个人资产结余",
-    column: 1,
-    row: 3,
-    children: [
-      {
-        name: "剩余资产",
-        id: "remainingAssets",
-        value: 0,
-        unit: "万",
-        type: "text",
-      },
-    ],
-  },
+  
 ];
 
 function Result() {
@@ -384,10 +355,12 @@ function Result() {
     className="items"
     style={{
       gridColumnStart:a.column,
-      gridRowStart: a.row 
+      gridRowStart: a.row, 
+      gridRowStart: a.gridRowStart,
+      gridColumnStart: a.gridColumnStart
       }}
     >
-      <h4>{a.cn}</h4>
+      <div className="title">{a.cn}</div>
       {a.children.map((e, index) => (
         <label 
         key={index} 
@@ -408,7 +381,7 @@ function Result() {
             />
           ) : (
             <span id={e.id} className="value">
-              {e.value ? e.value : "-"}
+              {e.value ? e.value : ""}
             </span>
           )}
           <span className="unit">{e.unit}</span>
@@ -468,11 +441,11 @@ function onPriceChange(e) {
 
   // 车贷 Car Loan
   // 车贷总额
-  const CL_total = $("CL_total").value;
+  // const CL_total = $("CL_total").value;
   // 车贷年限
-  const CL_period = $("CL_period").value * 12;
+  // const CL_period = $("CL_period").value * 12;
   // 车贷利率
-  const CL_rate = $("CL_rate").value / 1000;
+  // const CL_rate = $("CL_rate").value / 1000;
 
   //
   // 计算并返回结果
@@ -500,154 +473,22 @@ function onPriceChange(e) {
   // 商业贷款月供
   const MP_loan = ($("MP_loan").innerHTML = ( PMT(H_loan_rate, H_loan_period, H_loan, 0) * 10000 ).toFixed(0));
   // 车贷月供
-  const MP_car = ($("MP_car").innerHTML = ( PMT(CL_rate, CL_period, CL_total, 0) * 10000 ).toFixed(0));
+  // const MP_car = ($("MP_car").innerHTML = ( PMT(CL_rate, CL_period, CL_total, 0) * 10000 ).toFixed(0));
   // 车位月供
   const MP_parking_place = ($("MP_parking_place").innerHTML = ( PMT(PP_loan_rate, PP_loan_period, PP_loan, 0) * 10000 ).toFixed(0));
   // 合计月供
-  const MP_total = ($("MP_total").innerHTML = parseInt(MP_iHome) + parseInt(MP_fund) + parseInt(MP_car) + parseInt(MP_parking_place) + parseInt(MP_loan));
+  const MP_total = ($("MP_total").innerHTML = parseInt(MP_iHome) + parseInt(MP_fund) + parseInt(MP_parking_place) + parseInt(MP_loan));
 
   // 个人月结余计算
   // 月生活成本 Monthly Cost
-  const MC_life = $("monthlyLifeCost").value;
+  const MC_life = $("ME_life").value;
   // 月房租成本
-  const MC_rent = $("monthlyRentCost").value;
+  const MC_rent = $("ME_rent").value;
+  // 其他贷款
+  const MC_loan = $("ME_loan").value;
   // 每月结余
-  $("monthBalance").innerHTML = parseInt(MI_wage) + parseInt(MI_fund) - parseInt(MP_total) - parseInt(MC_life) - parseInt(MC_rent);
+  $("monthBalance").innerHTML = parseInt(MI_wage) + parseInt(MI_fund) - parseInt(MP_total) - parseInt(MC_life) - parseInt(MC_rent) - parseInt(MC_loan);
 
   // 总资产剩余计算
   const remainingAssets = ($("remainingAssets").innerHTML = parseInt(TA_net) + parseInt(TA_fund) - parseInt(H_down_payment));
 }
-
-// 渲染贷款图表
-// function ShowChart(e) {
-//   // onPriceChange($('H_total_price').value);
-//   var chartDom = document.getElementById("main");
-//   var myChart = echarts.init(chartDom);
-//   var option;
-//   Calc(e);
-//   option = {
-//     title: {
-//       text: "贷款",
-//     },
-//     tooltip: {
-//       trigger: "item",
-//       triggerOn: "mousemove",
-//     },
-//     animationDurationUpdate: 1500,
-//     animationEasingUpdate: "quinticInOut",
-//     series: {
-//       type: "sankey",
-//       layout: "none",
-//       emphasis: {
-//         focus: "adjacency",
-//       },
-//       nodeAlign: "left",
-//       lineStyle: {
-//         color: "gradient",
-//         curveness: 0.5,
-//       },
-//       data: [
-//         {
-//           name: "总支出",
-//         },
-//         {
-//           name: "契税",
-//         },
-//         {
-//           name: "车位费",
-//         },
-//         {
-//           name: "车位定金",
-//         },
-//         {
-//           name: "车位贷款",
-//         },
-//         {
-//           name: "房屋总价",
-//         },
-//         {
-//           name: "3首付金额",
-//         },
-//         {
-//           name: "贷款总额",
-//         },
-//         {
-//           name: "iHome贷款",
-//         },
-//         {
-//           name: "自掏资金",
-//         },
-//         {
-//           name: "公积金贷款",
-//         },
-//         {
-//           name: "商业贷款",
-//         },
-//       ],
-//       links: [
-//         // {
-//         //   source: "总支出",
-//         //   target: "契税",
-//         //   value: H_deedTax,
-//         // },
-//         // {
-//         //   source: "总支出",
-//         //   target: "契税",
-//         //   value: deedTax,
-//         // },
-//         // {
-//         //   source: "总支出",
-//         //   target: "车位费",
-//         //   value: carport,
-//         // },
-//         // {
-//         //   source: "总支出",
-//         //   target: "房屋总价",
-//         //   value: H_total_price,
-//         // },
-//         {
-//           source: "房屋总价",
-//           target: "首付金额",
-//           value: down_payment_,
-//         },
-//         {
-//           source: "房屋总价",
-//           target: "贷款总额",
-//           value: loans,
-//         },
-//         {
-//           source: "首付金额",
-//           target: "自掏资金",
-//           value: myPay,
-//         },
-//         {
-//           source: "首付金额",
-//           target: "iHome贷款",
-//           value: iHome,
-//         },
-//         {
-//           source: "贷款总额",
-//           target: "商业贷款",
-//           value: commercialLoans,
-//         },
-//         {
-//           source: "贷款总额",
-//           target: "公积金贷款",
-//           value: H_fund,
-//         },
-//         {
-//           source: "车位费",
-//           target: "车位定金",
-//           value: carportEarnest,
-//         },
-//         {
-//           source: "车位费",
-//           target: "车位贷款",
-//           value: carportLoans,
-//         },
-//       ],
-//     },
-//   };
-
-//   option && myChart.setOption(option);
-// }
